@@ -1,0 +1,157 @@
+--While create a table into the Music_Storage named as singers.
+
+CREATE TABLE singers(
+	singer_id integer NOT NULL, 
+	first_name varchar, 
+	last_name varchar,
+	language_name varchar,
+	city  varchar,
+	country varchar, 
+	email varchar );
+
+--Using of ALTER Function with DROP, ADD, DELETE Coulumn from the table.
+	
+ALTER TABLE singers DROP COLUMN email; --uses to remove a column from the table.
+ALTER TABLE singers ADD COLUMN email varchar; -- Use to add new column into a table.
+DELETE FROM singers;
+
+--INSERT Data into Existing table.
+
+INSERT INTO singers
+VALUES(2, 'YO YO', 'Honey Singh','Hindi rap', 'U.P', 'India','Youyous2304@gmail.com'),
+	(3, 'Neha', 'Singh','Hindi', 'Punjab', 'India','nehas33@gmail.com'),
+	(4, 'Rohan', 'Rana','Punjabi', 'Maharastra', 'India','baoyan998@gmail.com'),
+	(5, 'Sonu', 'Singh','Hindi', 'Gujrat', 'India','yonye23@gmail.com'),
+	(6, 'Justin', 'Beber','English', 'London', 'USA','monyga35@gmail.com'),
+	(7, 'Montero', 'Jewana','English', 'Switzer-land', 'UK','parety65@gmail.com'),
+	(8, 'INNA', 'Ayyat','Englo-Arabic', 'Poland', 'Germany','roko34@gmail.com'),
+	(9, 'Zack', 'Knight','Hindi-English', 'Hongkong', 'China','toharpa236@gmail.com'),
+	(10, 'Siddhu', 'Mussewala','Punjabi', 'Punjab', 'India','rabu876@gmail.com'),
+	(11, 'Jubin', 'Nautaiyal','Hindi', 'Mumbai', 'India','rajupwa789@gmail.com');
+	
+--Using Of SELECT Function to select everything from the specific table.
+
+SELECT *
+FROM singers;
+
+-- Here Performing the Specific position reach value into the specific table row/ To perform the concatenation in character just using of ( || )..
+
+SELECT 
+LEFT(first_name,1) || ' . ' ||LEFT(last_name,1) AS Initials,
+first_name, last_name
+FROM singers;
+
+SELECT 
+LEFT(RIGHT(email,4),1), email
+FROM singers;
+
+SELECT 
+LEFT(email,1) || '***' || RIGHT(email,10) AS anonymized_email, email 
+FROM singers;
+
+SELECT 
+--POSITION('@' IN email), email --Execute as searching a specific letter in email. 
+LEFT(email, POSITION('@' IN email)-1), email
+FROM singers;
+
+--Uses of UPPER, LOWER and LENGTH Queries in POSTGRE with in Music_Storage
+
+SELECT
+UPPER(first_name) AS Name,
+LOWER(first_name) AS Name,
+first_name, 
+LENGTH(first_name) AS length
+FROM customer
+WHERE LENGTH(first_name)>=5 
+ORDER BY  length DESC
+LIMIT 5;
+
+SELECT first_name, last_name, LENGTH(first_name) AS name_length
+FROM customer
+--WHERE customer_id = 56 AND LOWER(first_name) LIKE '%Luis%'
+ORDER BY name_length;
+
+SELECT 
+LOWER(first_name), 
+LOWER(last_name), 
+LENGTH(email) 
+FROM customer
+WHERE LENGTH(email)>10
+OR LENGTH(first_name)>10;
+
+-----To perform the LEFT and RIGHT fucntion to gain the specific letter in character  
+
+SELECT 
+LEFT(first_name,1), first_name
+FROM customer
+ORDER BY LEFT(first_name,1) ASC;
+
+SELECT 
+RIGHT(last_name,2), last_name
+FROM customer
+ORDER BY RIGHT(last_name,1) ASC;
+
+SELECT 
+LEFT(RIGHT(email,4),1), email
+FROM customer;
+
+---To perform the concatenation in character just using of ( || ).
+	
+SELECT 
+LEFT(first_name,1) || '.' || LEFT(last_name,1) || '.' AS Initials_name, 
+first_name, last_name
+FROM customer;
+
+
+SELECT *
+FROM invoice;
+
+---Using Of Function of ALIAS - "AS" to rename the Column_Name.
+
+SELECT 
+EXTRACT(dow from invoice_date) AS day_of_week,
+SUM(total)
+FROM invoice
+GROUP BY day_of_week
+ORDER BY SUM(total) DESC;
+
+SELECT COUNT(invoice_date) AS total,  
+TO_CHAR(invoice_date,'dy, DD/MM/YYYY') AS day
+FROM invoice
+GROUP  BY day;
+
+SELECT levels, 
+CAST(REPLACE(levels, 'L', ' ') AS INT) AS remain
+FROM employee
+ORDER BY remain;
+
+
+---Perform The JOIN operations into the table.
+
+------INNER JOIN (-- That's join in the both common in table.)
+	
+SELECT * 
+FROM customer
+INNER JOIN employee 
+ON customer.first_name=employee.first_name;
+
+------INNER JOIN (-- That's join in the both common in table.)
+
+
+SELECT COUNT(*)
+FROM invoice AS Lu
+FULL OUTER JOIN customer AS Cu 
+ON Lu.customer_id = Cu.customer_id;
+
+
+SELECT *
+FROM customer AS Cu
+LEFT JOIN employee AS Em
+ON Cu.city=Em.city
+WHERE Em.city IS NOT NULL;
+
+SELECT *
+FROM customer AS Cu
+LEFT JOIN employee AS Em
+ON Cu.city=Em.city
+AND Em.first_name = Cu.first_name;
